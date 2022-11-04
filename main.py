@@ -1,18 +1,21 @@
 file = open('dist.csv')
-primeira_linha = file.readline().strip()
-csv = file.read()
+csv = file.readlines()
 file.close()
-
-cidades = primeira_linha.split(',')
-distancias = csv.split(',')
-
+ 
 matriz = []
 
-# for i in range(len(cidades)):  
-#   matriz.append(cidades[i] + distancias[i])
+for linha in csv:
+    campos = linha.replace("\n", "").split(",")
+    matriz.append(campos)
 
-# print(matriz)
+# ESSE CÓDIGO USA ZIP E POPULA OUTRA MATRIZ LENDO VERTICAL
+# x = zip(*matriz)
+# matriz2 = []
 
+# for i in x:
+#     matriz2.append(list(i)) 
+
+# print(matriz2)
 
 escolha = '0'
 custo_por_km = '0'
