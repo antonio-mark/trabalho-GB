@@ -1,3 +1,10 @@
+# variaveis
+escolha = '0'
+custo_por_km = '0'
+cidade_origem = None
+cidade_destino = None
+
+# abre csv e cria matriz
 file = open('dist.csv')
 csv = file.readlines()
 file.close()
@@ -8,17 +15,63 @@ for linha in csv:
     campos = linha.replace("\n", "").split(",")
     matriz.append(campos)
 
-# ESSE CÓDIGO USA ZIP E POPULA OUTRA MATRIZ LENDO VERTICAL
-# x = zip(*matriz)
-# matriz2 = []
+# funçoes de validação
+def custo_por_km_is_valid_or_default(custo_por_km):
+    if custo_por_km <= '0' or not custo_por_km.replace('.','',1).isdigit():
+        print('O valor informado é inválido!')
+        custo_por_km = '0'
+    return custo_por_km
 
-# for i in x:
-#     matriz2.append(list(i)) 
+def custo_por_km_is_valid(custo_por_km):
+    if custo_por_km == '0':
+        print('\nNão foi informado o custo por km rodado!') 
+        return False
+    else: return True
 
-# print(matriz2)
+def cidades_are_valid(cidade_origem, cidade_destino):
+    if cidade_origem == cidade_destino or cidade_origem not in matriz[0] or cidade_destino not in matriz[0]:
+        print("\nCidades não existem no cadastro ou são iguais! \nDigite novamente\n")
+        cidade_destino = None
+        cidade_origem = None
+    return cidade_origem, cidade_destino
 
-escolha = '0'
-custo_por_km = '0'
+# funçao para salvar no historico.csv
+def salva_historico(historico):
+    log = open('historico.csv', 'a')
+    log.write('\n')
+    for i in historico:
+        log.write(i) if i == historico[-1] else log.write(i + ',')
+    log.flush()
+    log.close()
+
+# funçao de calculo menu escolha 2
+def calcula_distancia_custo_total(cidade_origem, cidade_destino, custo_por_km):
+    posicao_cidade_origem = matriz[0].index(cidade_origem)
+    posicao_cidade_destino = matriz[0].index(cidade_destino)
+    valor_distancia_destino = matriz[posicao_cidade_origem + 1][posicao_cidade_destino]
+    custo_total_trecho = int(valor_distancia_destino) * float(custo_por_km)
+    return valor_distancia_destino, custo_total_trecho
+
+# funçao escolha um
+def escolha_um():
+    custo_por_km = input("Informe o custo por km rodado: ")
+    custo_por_km = custo_por_km_is_valid_or_default(custo_por_km)
+    return custo_por_km
+
+# funçao escolha dois
+def escolha_dois(cidade_origem, cidade_destino, custo_por_km):
+    while cidade_origem == None and cidade_destino == None:
+        cidade_origem = input("Informe a cidade de origem: ").upper()
+        cidade_destino = input("Informe a cidade de destino: ").upper()
+        cidade_origem, cidade_destino = cidades_are_valid(cidade_origem, cidade_destino)
+    
+    valor_distancia_destino, custo_total_trecho = calcula_distancia_custo_total(cidade_origem, cidade_destino, custo_por_km)
+    
+    print("\nDistância rodoviária entre {} e {}: {} Km".format(cidade_origem.capitalize(), cidade_destino.capitalize(), valor_distancia_destino))
+    print("Custo total do trecho: R$ {:.2f}".format(custo_total_trecho))
+
+    historico = [cidade_origem, cidade_destino, valor_distancia_destino, custo_por_km, str(custo_total_trecho)]
+    salva_historico(historico)
 
 def menu():
     print('\n..:: Escolha sua opção ::..\n')
@@ -28,41 +81,25 @@ def menu():
     print('4 - Rota completa')
     print('5 - Sair\n')
     item = input('Escolha uma opção: ')
-    return item
+    return item      
 
-def escolha_um():
-    custo_por_km = input("Informe o custo por km rodado: ")
-    if custo_por_km <= '0' or not custo_por_km.replace('.','',1).isdigit():
-        print('O valor informado é inválido!')
-        custo_por_km = '0'
-    return custo_por_km
-
-def escolha_dois():
-    print('z')
-
-while escolha != '6':
+while escolha != '5':
     escolha = menu()
     if escolha == '1':
         custo_por_km = escolha_um()
         
     elif escolha == '2':
-        if custo_por_km == '0':
-            print('Não foi informado o custo por km rodado!')
-            continue 
-        escolha_dois()
+        if custo_por_km_is_valid(custo_por_km): 
+            escolha_dois(cidade_origem, cidade_destino, custo_por_km)
 
     elif escolha == '3':
-        if custo_por_km == '0':
-            print('Não foi informado o custo por km rodado!')
-            continue  
-        print('Sistema !')
+        if custo_por_km_is_valid(custo_por_km): 
+            print('Sistema !')
 
     elif escolha == '4':
-        if custo_por_km == '0':
-            print('Não foi informado o custo por km rodado!') 
-            continue 
-        print('Sistema !') 
-        
+        if custo_por_km_is_valid(custo_por_km): 
+            print('Sis!')
+
     elif escolha == '5':
         print('Sistema finalizado!') 
         break
