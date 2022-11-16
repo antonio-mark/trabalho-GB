@@ -3,6 +3,7 @@ escolha = '0'
 custo_por_km = '0'
 cidade_origem = None
 cidade_destino = None
+tres_cidades = []
 
 # abre csv e cria matriz
 file = open('dist.csv')
@@ -34,6 +35,14 @@ def cidades_are_valid(cidade_origem, cidade_destino):
         cidade_destino = None
         cidade_origem = None
     return cidade_origem, cidade_destino
+
+def tres_cidades_are_valid(cidades, tres_cidades):
+    array_cidades = cidades.replace(", ", ",").split(",")
+    for i, cidade in enumerate(array_cidades):
+        if cidade not in matriz[0] or cidade in array_cidades[i+1:]:
+            print("\nCidades não existem no cadastro ou são iguais!\n")
+            return tres_cidades
+    return array_cidades
 
 # funçao para salvar no historico.csv
 def salva_historico(historico):
@@ -73,6 +82,14 @@ def escolha_dois(cidade_origem, cidade_destino, custo_por_km):
     historico = [cidade_origem, cidade_destino, valor_distancia_destino, custo_por_km, str(custo_total_trecho)]
     salva_historico(historico)
 
+# funçao escolha tres
+def escolha_tres(tres_cidades):
+    cidades = input("Informe as três cidades: ").upper()
+    tres_cidades = tres_cidades_are_valid(cidades, tres_cidades)
+    if not tres_cidades:
+        return
+    # TO-DO    
+
 def menu():
     print('\n..:: Escolha sua opção ::..\n')
     print('1 - Custo por km rodado')
@@ -94,7 +111,7 @@ while escolha != '5':
 
     elif escolha == '3':
         if custo_por_km_is_valid(custo_por_km): 
-            print('Sistema !')
+            escolha_tres(tres_cidades)
 
     elif escolha == '4':
         if custo_por_km_is_valid(custo_por_km): 
@@ -107,5 +124,4 @@ while escolha != '5':
     else:
         print('\nOpção desconhecida!\n')
         input('\n\nPressione ENTER para continuar   ')
-
         
