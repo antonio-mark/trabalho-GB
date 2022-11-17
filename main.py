@@ -40,8 +40,8 @@ def cidades_are_valid(cidade_origem, cidade_destino):
 def tres_cidades_are_valid(cidades, tres_cidades):
     array_cidades = cidades.replace(", ", ",").split(",")
     for i, cidade in enumerate(array_cidades):
-        if cidade not in matriz[0] or cidade in array_cidades[i+1:]:
-            print("\nCidades não existem no cadastro ou são iguais!\n")
+        if cidade not in matriz[0] or cidade in array_cidades[i+1:] or len(array_cidades) != 3:
+            print("\nCidades não existem no cadastro, são iguais ou não foi informado 3 cidades!\n")
             return tres_cidades
     return array_cidades
 
@@ -62,13 +62,35 @@ def calcula_distancia_custo_total(cidade_origem, cidade_destino, custo_por_km):
     custo_total_trecho = int(valor_distancia_destino) * float(custo_por_km)
     return valor_distancia_destino, custo_total_trecho
 
+def calcula_escolha_tres(tres_cidades):
+    posicao_primeira_cidade = matriz[0].index(tres_cidades[0])
+    posicao_segunda_cidade = matriz[0].index(tres_cidades[1])
+    posicao_terceira_cidade = matriz[0].index(tres_cidades[2])
+
+    valor_distancia_primeira_segunda = matriz[posicao_primeira_cidade + 1][posicao_segunda_cidade]
+    valor_distancia_primeira_terceira = matriz[posicao_primeira_cidade + 1][posicao_terceira_cidade]
+    valor_distancia_segunda_terceira = matriz[posicao_segunda_cidade + 1][posicao_terceira_cidade]
+    valor_distancia_terceira_segunda = matriz[posicao_terceira_cidade + 1][posicao_segunda_cidade]
+
+    if valor_distancia_primeira_segunda < valor_distancia_primeira_terceira:
+        print("\nDe {} até {} são {} Km e de {} até {} são {} Km".format(tres_cidades[0].capitalize(), tres_cidades[1].capitalize(), 
+                                                                        valor_distancia_primeira_segunda,
+                                                                        tres_cidades[1].capitalize(), tres_cidades[2].capitalize(), 
+                                                                        valor_distancia_segunda_terceira))
+        print("\nDistância total percorrida: {} Km".format(int(valor_distancia_primeira_segunda) + int(valor_distancia_segunda_terceira))) 
+    else:
+        print("\nDe {} até {} são {} Km e de {} até {} são {} Km".format(tres_cidades[0].capitalize(), tres_cidades[2].capitalize(), 
+                                                                        valor_distancia_primeira_terceira,
+                                                                        tres_cidades[2].capitalize(), tres_cidades[1].capitalize(), 
+                                                                        valor_distancia_terceira_segunda))
+        print("\nDistância total percorrida: {} Km".format(int(valor_distancia_primeira_terceira) + int(valor_distancia_terceira_segunda)))   
+
 # funçao de calculo menu escolha 4
 def calcula_escolha_quatro(array_cidades):
     for cidade in array_cidades:
         posicao_cidade_origem = matriz[0].index(cidade_origem)
         posicao_cidade_destino = matriz[0].index(cidade_destino)
         valor_distancia_destino = matriz[posicao_cidade_origem + 1][posicao_cidade_destino]
-
 
 # funçao escolha um
 def escolha_um():
@@ -96,29 +118,9 @@ def escolha_tres(tres_cidades):
     cidades = input("Informe as três cidades: ").upper()
     tres_cidades = tres_cidades_are_valid(cidades, tres_cidades)
     if not tres_cidades:
-        return
-    posicao_primeira_cidade = matriz[0].index(tres_cidades[0])
-    posicao_segunda_cidade = matriz[0].index(tres_cidades[1])
-    posicao_terceira_cidade = matriz[0].index(tres_cidades[2])
-
-    valor_distancia_primeira_segunda = matriz[posicao_primeira_cidade + 1][posicao_segunda_cidade]
-    valor_distancia_primeira_terceira = matriz[posicao_primeira_cidade + 1][posicao_terceira_cidade]
-    valor_distancia_segunda_terceira = matriz[posicao_segunda_cidade + 1][posicao_terceira_cidade]
-    valor_distancia_terceira_segunda = matriz[posicao_terceira_cidade + 1][posicao_segunda_cidade]
-
-    if valor_distancia_primeira_segunda < valor_distancia_primeira_terceira:
-        print("\nDe {} até {} são {} Km e de {} até {} são {} Km".format(tres_cidades[0].capitalize(), tres_cidades[1].capitalize(), 
-                                                                        valor_distancia_primeira_segunda,
-                                                                        tres_cidades[1].capitalize(), tres_cidades[2].capitalize(), 
-                                                                        valor_distancia_segunda_terceira))
-        print("\nDistância total percorrida: {} Km".format(int(valor_distancia_primeira_segunda) + int(valor_distancia_segunda_terceira))) 
-    else:
-        print("\nDe {} até {} são {} Km e de {} até {} são {} Km".format(tres_cidades[0].capitalize(), tres_cidades[2].capitalize(), 
-                                                                        valor_distancia_primeira_terceira,
-                                                                        tres_cidades[2].capitalize(), tres_cidades[1].capitalize(), 
-                                                                        valor_distancia_terceira_segunda))
-        print("\nDistância total percorrida: {} Km".format(int(valor_distancia_primeira_terceira) + int(valor_distancia_terceira_segunda)))     
-
+        return   
+    calcula_escolha_tres(tres_cidades)
+      
 # funçao escolha quatro
 def escolha_quatro():
     cidade = ''
