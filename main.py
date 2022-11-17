@@ -88,7 +88,27 @@ def escolha_tres(tres_cidades):
     tres_cidades = tres_cidades_are_valid(cidades, tres_cidades)
     if not tres_cidades:
         return
-    # TO-DO    
+    posicao_primeira_cidade = matriz[0].index(tres_cidades[0])
+    posicao_segunda_cidade = matriz[0].index(tres_cidades[1])
+    posicao_terceira_cidade = matriz[0].index(tres_cidades[2])
+
+    valor_distancia_primeira_segunda = matriz[posicao_primeira_cidade + 1][posicao_segunda_cidade]
+    valor_distancia_primeira_terceira = matriz[posicao_primeira_cidade + 1][posicao_terceira_cidade]
+    valor_distancia_segunda_terceira = matriz[posicao_segunda_cidade + 1][posicao_terceira_cidade]
+    valor_distancia_terceira_segunda = matriz[posicao_terceira_cidade + 1][posicao_segunda_cidade]
+
+    if valor_distancia_primeira_segunda < valor_distancia_primeira_terceira:
+        print("\nDe {} até {} são {} Km e de {} até {} são {} Km".format(tres_cidades[0].capitalize(), tres_cidades[1].capitalize(), 
+                                                                        valor_distancia_primeira_segunda,
+                                                                        tres_cidades[1].capitalize(), tres_cidades[2].capitalize(), 
+                                                                        valor_distancia_segunda_terceira))
+        print("\nDistância total percorrida: {} Km".format(int(valor_distancia_primeira_segunda) + int(valor_distancia_segunda_terceira))) 
+    else:
+        print("\nDe {} até {} são {} Km e de {} até {} são {} Km".format(tres_cidades[0].capitalize(), tres_cidades[2].capitalize(), 
+                                                                        valor_distancia_primeira_terceira,
+                                                                        tres_cidades[2].capitalize(), tres_cidades[1].capitalize(), 
+                                                                        valor_distancia_terceira_segunda))
+        print("\nDistância total percorrida: {} Km".format(int(valor_distancia_primeira_terceira) + int(valor_distancia_terceira_segunda)))     
 
 def menu():
     print('\n..:: Escolha sua opção ::..\n')
