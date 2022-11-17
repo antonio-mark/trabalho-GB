@@ -4,6 +4,7 @@ custo_por_km = '0'
 cidade_origem = None
 cidade_destino = None
 tres_cidades = []
+cidades_escolha_quatro = []
 
 # abre csv e cria matriz
 file = open('dist.csv')
@@ -61,6 +62,14 @@ def calcula_distancia_custo_total(cidade_origem, cidade_destino, custo_por_km):
     custo_total_trecho = int(valor_distancia_destino) * float(custo_por_km)
     return valor_distancia_destino, custo_total_trecho
 
+# funçao de calculo menu escolha 4
+def calcula_escolha_quatro(array_cidades):
+    for cidade in array_cidades:
+        posicao_cidade_origem = matriz[0].index(cidade_origem)
+        posicao_cidade_destino = matriz[0].index(cidade_destino)
+        valor_distancia_destino = matriz[posicao_cidade_origem + 1][posicao_cidade_destino]
+
+
 # funçao escolha um
 def escolha_um():
     custo_por_km = input("Informe o custo por km rodado: ")
@@ -90,6 +99,22 @@ def escolha_tres(tres_cidades):
         return
     # TO-DO    
 
+# funçao escolha quatro
+def escolha_quatro():
+    cidade = ''
+    while cidade.upper() != 'FIM':
+        cidade = input("Informe no mínimo três cidades válidas (uma de cada vez) e digite \"fim\" quando terminar: ").upper()
+        cidades_escolha_quatro.append(cidade)
+    if len(cidades_escolha_quatro) < 3:
+        print('Quantidade menor que 3, comando recusado')
+        cidades_escolha_quatro.clear()
+    for cidade in cidades_escolha_quatro:
+        if cidade not in matriz[0]:
+            print('Uma cidade informada é inválida')
+            cidades_escolha_quatro.clear()
+            escolha_quatro()
+    calcula_escolha_quatro(cidades_escolha_quatro)
+    
 def menu():
     print('\n..:: Escolha sua opção ::..\n')
     print('1 - Custo por km rodado')
@@ -115,7 +140,7 @@ while escolha != '5':
 
     elif escolha == '4':
         if custo_por_km_is_valid(custo_por_km): 
-            print('Sis!')
+            escolha_quatro()
 
     elif escolha == '5':
         print('Sistema finalizado!') 
